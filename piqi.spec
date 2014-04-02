@@ -1,10 +1,10 @@
-%global commit d4e0d42922ae2069e025c73564d5a74bf7b78e11
+%global commit ded745779a8216b838302e1e1ae4e5f5adacd3b0
 %global shortcommit %(echo %{commit} | cut -c 1-7)
 
 Name:		piqi
-Version:	0.6.5
-Release:	2%{?dist}
-Summary:	Set of languages and tools for working with structured data
+Version:	0.6.6
+Release:	1%{?dist}
+Summary:	Universal schema language for JSON, XML, Protocol Buffers
 
 Group:	Development/Languages
 
@@ -25,43 +25,42 @@ BuildRequires:	pandoc
 BuildRequires:	protobuf-devel
 
 %description
-Piqi is a set of languages and open-source tools for working with structured
-data. It includes:
+Piqi is a universal schema language and a collection of tools built
+around it.
 
-    - A cross-language data serialization system compatible with Google Protocol
-      Buffers. It allows programs implemented in various languages to exchange
-      and persist data in a portable manner.
+The Piqi language can be used to define schemas for JSON, XML, Google
+Protocol Buffers and some other data formats.
 
-    - Piq -- a human-friendly typed data representation language. It is designed
-      to be more convenient for representing, viewing and editing data than
-      JSON, XML, CSV, S-expressions and other formats.
+This package includes "piqi" command-line program that exposes some
+of the tools:
 
-    - Piqi -- a powerful data definition language. It is specially designed to
-      be used with Piq, but also works as a schema language for other data
-      formats including JSON, XML and Protocol Buffers binary format. Tools for
-      validating, pretty-printing and converting data between Piq, JSON, XML
-      and Protocol Buffers binary format.
+- for validating, pretty-printing and converting data between JSON,
+  XML, Protocol Buffers and Piq formats.
 
-    - Piqi-RPC -- an RPC-over-HTTP system for Erlang. It provides a simple way
-      to expose Erlang services via JSON, XML and Google Protocol Buffers over
-      HTTP.
+- for working with the schemas, such as converting definitions between
+  Piqi (.piqi) and Protocol Buffes (.proto), and "compiling" Piqi
+  definitions into one of the supported portable data representation
+  formats (JSON, XML, Protocol Buffers).
 
-As a data serialization system, Piqi implements native support for OCaml and
-Erlang. Connectivity with other programming languages is provided via Google
-Protocol Buffers. Overall, Piqi provides a more natural mapping to functional
-programming languages compared to various serialization systems that were
-originally designed for imperative or object-oriented languages.
+Other Piqi sub-projects include:
 
-Piqi was inspired by Google Protocol Buffers and specially designed to be
-largely compatible with it. Like Protocol Buffers, Piqi relies on type
-definitions and supports data schema evolution. The main difference is that Piqi
-has a richer data model, high-level modules and a powerful data representation
-language (Piq).
+- A multi-format (JSON, XML, Protocol Buffers) data serialization
+  system for Erlang and OCaml.
 
-The combination of data representation (Piq) and data definition (Piqi)
-languages is similar to the concept of "valid XML" (i.e. XML conforming to some
-XML Schema). However, unlike XML, Piq has a concise, clean syntax and a data
-model similar to those of high-level programming languages.
+- Piq -- a human-friendly typed data representation language. It is
+  designed to be more convenient for viewing and editing data compared
+  to JSON, XML, CSV, S-expressions and other formats.
+
+- Piqi-RPC -- an RPC-over-HTTP system for Erlang. It provides a simple
+  way to expose Erlang services via JSON, XML and Protocol Buffers
+  over HTTP.
+
+The Piqi project was inspired by Google Protocol Buffers and designed to
+be largely compatible with it. Like Protocol Buffers, Piqi relies on
+type definitions and supports schema evolution. The main differences is
+that Piqi has a richer data model, high-level modules, standard mappings
+to JSON and XML, and comes with a powerful data representation format
+(Piq). Also, Piqi is a lot more extensible.
 
 
 %prep
@@ -73,7 +72,7 @@ export OCAMLPATH=
 ./configure --prefix=/usr
 make deps
 make
-make -C doc
+make doc
 
 
 %check
@@ -84,9 +83,6 @@ make -C tests
 %install
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
-install -d %{buildroot}%{_mandir}/man1
-install -m 644 -t %{buildroot}%{_mandir}/man1 \
-		%{_builddir}/%{buildsubdir}/doc/piqi.1
 
 
 %clean
@@ -101,6 +97,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+
+* Tue Apr 01 2014 Anton Lavrik <alavrik@piqi.org> 0.6.6-1
+- Bump upstream 0.6.5 -> 0.6.6
+- Remove piqi.1 manpage installation step as it is now installed as a part of
+  "make install"
 
 * Thu Nov 14 2013 Anton Lavrik <alavrik@piqi.org> 0.6.5-2
 - Cosmetic changes
